@@ -16,6 +16,16 @@ public class SocialService {
     }
 
     public SocialUser saveUser(SocialUser socialUser) {
+        if(socialUser.getSocialProfile()!=null){
+            socialUser.getSocialProfile().setSocialUser(socialUser);
+        }
         return socialUserRepository.save(socialUser);
+    }
+
+    public SocialUser deleteUser(Long id) {
+        SocialUser socialUser = socialUserRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("User Not Found"));
+        socialUserRepository.delete(socialUser);
+        return socialUser;
     }
 }

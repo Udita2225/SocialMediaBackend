@@ -22,4 +22,10 @@ public class SocialProfile {
     private SocialUser socialUser;
 
     private String description;
+
+    public void setSocialUser(SocialUser socialUser){
+        this.socialUser = socialUser;
+        if(socialUser.getSocialProfile()!=this)
+        socialUser.setSocialProfile(this);
+    }
 }

@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.*;
 
 
 @Data
+//@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -20,13 +22,13 @@ public class SocialUser {
 
 //    @OneToOne
 //    @JoinColumn(name="social_profile_id")
-    @OneToOne(mappedBy = "socialUser", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "socialUser", cascade = {CascadeType.PERSIST,CascadeType.MERGE, CascadeType.REMOVE})
     private SocialProfile socialProfile;
 
-    @OneToMany(mappedBy="socialUser")
+    @OneToMany(mappedBy="socialUser", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Post> posts =  new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_group",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -40,7 +42,8 @@ public class SocialUser {
     }
 
     public void setSocialProfile(SocialProfile socialProfile){
-        socialProfile.setSocialUser(this);
         this.socialProfile = socialProfile;
+        socialProfile.setSocialUser(this);
+
     }
 }
